@@ -2,7 +2,7 @@ import warnings
 warnings.filterwarnings('ignore')
 import pandas as pd
 import matplotlib.pyplot as plt
-# import numpy as np
+import numpy as np
 # import matplotlib.pyplot as plt
 # import seaborn as sns
 # from imblearn.over_sampling import SMOTE
