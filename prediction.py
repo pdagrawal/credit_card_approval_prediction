@@ -2,22 +2,25 @@ import warnings
 warnings.filterwarnings('ignore')
 import pandas as pd
 import matplotlib.pyplot as plt
-# import numpy as np
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# from imblearn.over_sampling import SMOTE
-# import itertools
+import warnings
+warnings.filterwarnings('ignore')
+import numpy as np
+import pandas as pd   
+import matplotlib.pyplot as plt
+import seaborn as sns
+#from imblearn.over_sampling import SMOTE
+import itertools
 
-# from sklearn.model_selection import train_test_split
-# from sklearn.metrics import accuracy_score, confusion_matrix
-# from sklearn.linear_model import LogisticRegression
-# from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
 
-# from xgboost import XGBClassifier
-# from lightgbm import LGBMClassifier
-# from catboost import CatBoostClassifier
-# from sklearn import svm
-# from sklearn.ensemble import RandomForestClassifier
+#from xgboost import XGBClassifier
+#from lightgbm import LGBMClassifier
+#from catboost import CatBoostClassifier
+from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
 
 data = pd.read_csv("input/application_record.csv", encoding = 'utf-8')
 record = pd.read_csv("input/credit_record.csv", encoding = 'utf-8')
