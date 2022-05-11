@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd   
 import matplotlib.pyplot as plt
 import seaborn as sns
-#from imblearn.over_sampling import SMOTE
+from imblearn.over_sampling import SMOTE
 import itertools
 
 from sklearn.model_selection import train_test_split
@@ -166,6 +166,225 @@ print(new_data['Gender'].value_counts())
 iv, data = calc_iv(new_data,'Gender','target')
 ivtable.loc[ivtable['variable']=='Gender','IV']=iv
 data.head()
+
+
+new_data['Car'] = new_data['Car'].replace(['N','Y'],[0,1])
+print(new_data['Car'].value_counts())
+iv, data=calc_iv(new_data,'Car','target')
+ivtable.loc[ivtable['variable']=='Car','IV']=iv
+data.head()
+
+
+
+new_data['Reality'] = new_data['Reality'].replace(['N','Y'],[0,1])
+print(new_data['Reality'].value_counts())
+iv, data=calc_iv(new_data,'Reality','target')
+ivtable.loc[ivtable['variable']=='Reality','IV']=iv
+data.head()
+
+
+new_data['phone']=new_data['phone'].astype(str)
+print(new_data['phone'].value_counts(normalize=True,sort=False))
+new_data.drop(new_data[new_data['phone'] == 'nan' ].index, inplace=True)
+iv, data=calc_iv(new_data,'phone','target')
+ivtable.loc[ivtable['variable']=='phone','IV']=iv
+data.head()
+
+
+
+
+print(new_data['email'].value_counts(normalize=True,sort=False))
+new_data['email']=new_data['email'].astype(str)
+iv, data=calc_iv(new_data,'email','target')
+ivtable.loc[ivtable['variable']=='email','IV']=iv
+data.head()
+
+
+
+new_data['wkphone']=new_data['wkphone'].astype(str)
+iv, data = calc_iv(new_data,'wkphone','target')
+new_data.drop(new_data[new_data['wkphone'] == 'nan' ].index, inplace=True)
+ivtable.loc[ivtable['variable']=='wkphone','IV']=iv
+data.head()
+
+
+new_data.loc[new_data['ChldNo'] >= 2,'ChldNo']='2More'
+print(new_data['ChldNo'].value_counts(sort=False))
+
+
+iv, data=calc_iv(new_data,'ChldNo','target')
+ivtable.loc[ivtable['variable']=='ChldNo','IV']=iv
+data.head()
+
+
+new_data = convert_dummy(new_data,'ChldNo')
+
+
+new_data['inc']=new_data['inc'].astype(object)
+new_data['inc'] = new_data['inc']/10000 
+print(new_data['inc'].value_counts(bins=10,sort=False))
+new_data['inc'].plot(kind='hist',bins=50,density=True)
+
+
+
+new_data = get_category(new_data,'inc', 3, ["low","medium", "high"], qcut = True)
+iv, data = calc_iv(new_data,'gp_inc','target')
+ivtable.loc[ivtable['variable']=='inc','IV']=iv
+data.head()
+
+
+new_data = convert_dummy(new_data,'gp_inc')
+
+
+new_data['Age']=-(new_data['DAYS_BIRTH'])//365	
+print(new_data['Age'].value_counts(bins=10,normalize=True,sort=False))
+new_data['Age'].plot(kind='hist',bins=20,density=True)
+
+
+
+new_data = get_category(new_data,'Age',5, ["lowest","low","medium","high","highest"])
+iv, data = calc_iv(new_data,'gp_Age','target')
+ivtable.loc[ivtable['variable']=='DAYS_BIRTH','IV'] = iv
+data.head()
+
+
+new_data = convert_dummy(new_data,'gp_Age')
+
+
+new_data['worktm']=-(new_data['DAYS_EMPLOYED'])//365	
+new_data[new_data['worktm']<0] = np.nan # replace by na
+new_data['DAYS_EMPLOYED']
+new_data['worktm'].fillna(new_data['worktm'].mean(),inplace=True) #replace na by mean
+new_data['worktm'].plot(kind='hist',bins=20,density=True)
+
+
+
+new_data = get_category(new_data,'worktm',5, ["lowest","low","medium","high","highest"])
+iv, data=calc_iv(new_data,'gp_worktm','target')
+ivtable.loc[ivtable['variable']=='DAYS_EMPLOYED','IV']=iv
+data.head()
+
+new_data = convert_dummy(new_data,'gp_worktm')
+
+new_data['famsize'].value_counts(sort=False)
+
+
+new_data['famsize']=new_data['famsize'].astype(int)
+new_data['famsizegp']=new_data['famsize']
+new_data['famsizegp']=new_data['famsizegp'].astype(object)
+new_data.loc[new_data['famsizegp']>=3,'famsizegp']='3more'
+iv, data=calc_iv(new_data,'famsizegp','target')
+ivtable.loc[ivtable['variable']=='famsize','IV']=iv
+data.head()
+
+
+new_data = convert_dummy(new_data,'famsizegp')
+
+
+print(new_data['inctp'].value_counts(sort=False))
+print(new_data['inctp'].value_counts(normalize=True,sort=False))
+new_data.loc[new_data['inctp']=='Pensioner','inctp']='State servant'
+new_data.loc[new_data['inctp']=='Student','inctp']='State servant'
+iv, data=calc_iv(new_data,'inctp','target')
+ivtable.loc[ivtable['variable']=='inctp','IV']=iv
+data.head()
+
+new_data = convert_dummy(new_data,'inctp')
+
+
+new_data.loc[(new_data['occyp']=='Cleaning staff') | (new_data['occyp']=='Cooking staff') | (new_data['occyp']=='Drivers') | (new_data['occyp']=='Laborers') | (new_data['occyp']=='Low-skill Laborers') | (new_data['occyp']=='Security staff') | (new_data['occyp']=='Waiters/barmen staff'),'occyp']='Laborwk'
+new_data.loc[(new_data['occyp']=='Accountants') | (new_data['occyp']=='Core staff') | (new_data['occyp']=='HR staff') | (new_data['occyp']=='Medicine staff') | (new_data['occyp']=='Private service staff') | (new_data['occyp']=='Realty agents') | (new_data['occyp']=='Sales staff') | (new_data['occyp']=='Secretaries'),'occyp']='officewk'
+new_data.loc[(new_data['occyp']=='Managers') | (new_data['occyp']=='High skill tech staff') | (new_data['occyp']=='IT staff'),'occyp']='hightecwk'
+print(new_data['occyp'].value_counts())
+iv, data=calc_iv(new_data,'occyp','target')
+ivtable.loc[ivtable['variable']=='occyp','IV']=iv
+data.head()
+
+
+new_data = convert_dummy(new_data,'occyp')
+
+iv, data=calc_iv(new_data,'houtp','target')
+ivtable.loc[ivtable['variable']=='houtp','IV']=iv
+data.head()
+
+
+new_data = convert_dummy(new_data,'houtp')
+
+new_data.loc[new_data['edutp']=='Academic degree','edutp']='Higher education'
+iv, data=calc_iv(new_data,'edutp','target')
+ivtable.loc[ivtable['variable']=='edutp','IV']=iv
+data.head()
+
+new_data = convert_dummy(new_data,'edutp')
+
+new_data['famtp'].value_counts(normalize=True,sort=False)
+
+iv, data=calc_iv(new_data,'famtp','target')
+ivtable.loc[ivtable['variable']=='famtp','IV']=iv
+data.head()
+
+new_data = convert_dummy(new_data,'famtp')
+
+
+ivtable=ivtable.sort_values(by='IV',ascending=False)
+ivtable.loc[ivtable['variable']=='DAYS_BIRTH','variable']='agegp'
+ivtable.loc[ivtable['variable']=='DAYS_EMPLOYED','variable']='worktmgp'
+ivtable.loc[ivtable['variable']=='inc','variable']='incgp'
+ivtable
+
+
+new_data.columns
+
+Y = new_data['target']
+X = new_data[['Gender','Reality','ChldNo_1', 'ChldNo_2More','wkphone',
+              'gp_Age_high', 'gp_Age_highest', 'gp_Age_low',
+       'gp_Age_lowest','gp_worktm_high', 'gp_worktm_highest',
+       'gp_worktm_low', 'gp_worktm_medium','occyp_hightecwk', 
+              'occyp_officewk','famsizegp_1', 'famsizegp_3more',
+       'houtp_Co-op apartment', 'houtp_Municipal apartment',
+       'houtp_Office apartment', 'houtp_Rented apartment',
+       'houtp_With parents','edutp_Higher education',
+       'edutp_Incomplete higher', 'edutp_Lower secondary','famtp_Civil marriage',
+       'famtp_Separated','famtp_Single / not married','famtp_Widow']]
+
+
+Y = Y.astype('int')
+X_balance,Y_balance = SMOTE().fit_resample(X,Y)
+X_balance = pd.DataFrame(X_balance, columns = X.columns)
+
+X_train, X_test, y_train, y_test = train_test_split(X_balance,Y_balance, 
+                                                    stratify=Y_balance, test_size=0.3,
+                                                    random_state = 10086)
+
+model = LogisticRegression(C=0.8,
+                           random_state=0,
+                           solver='lbfgs')
+model.fit(X_train, y_train)
+y_predict = model.predict(X_test)
+
+print('Accuracy Score is {:.5}'.format(accuracy_score(y_test, y_predict)))
+print(pd.DataFrame(confusion_matrix(y_test,y_predict)))
+
+sns.set_style('white') 
+class_names = ['0','1']
+plot_confusion_matrix(confusion_matrix(y_test,y_predict),
+                      classes= class_names, normalize = True, 
+                      title='Normalized Confusion Matrix: Logistic Regression')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
