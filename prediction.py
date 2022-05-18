@@ -1,6 +1,6 @@
 import warnings
 warnings.filterwarnings('ignore')
-#importing the libraries
+# importing the libraries
 import numpy as np
 import pandas as pd   
 import matplotlib.pyplot as plt
@@ -14,11 +14,11 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn import svm
 from sklearn.ensemble import RandomForestClassifier
 
-#Reading both the csv files
+# Reading both the csv files
 data = pd.read_csv("input/application_record.csv", encoding = 'utf-8')
 record = pd.read_csv("input/credit_record.csv", encoding = 'utf-8')
 
-#specify the white as background color for plots in matplotlib
+# specify the white as background color for plots in matplotlib
 plt.rcParams['figure.facecolor'] = 'white'
 
 
@@ -45,7 +45,7 @@ new_data['target'] = new_data['dep_value']
 new_data.loc[new_data['target'] == 'Yes', 'target'] = 1
 new_data.loc[new_data['target'] == 'No', 'target'] = 0
 
-#print(len(new_data))
+# print(len(new_data))
 
 print(cpunt['dep_value'].value_counts())
 cpunt['dep_value'].value_counts(normalize=True)
@@ -104,7 +104,7 @@ def calc_iv(df, feature, target, pr=False):
     data.index = range(len(data.index))
 
     if pr:
-        print(data)
+        # print(data)
         print('IV = ', data['IV'].sum())
 
     iv = data['IV'].sum()
@@ -145,7 +145,7 @@ def plot_confusion_matrix(cm, classes,
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-    print(cm)
+    # print(cm)
 
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
@@ -170,7 +170,7 @@ def plot_confusion_matrix(cm, classes,
 # Replace Gender as F and M to 0 and 1 and calcualte information value
 new_data['Gender'] = new_data['Gender'].replace(['F','M'],[0,1])
 print('-----------')
-print(new_data)
+# print(new_data)
 print('-----------')
 print(new_data['Gender'].value_counts())
 iv, data = calc_iv(new_data,'Gender','target')
@@ -428,28 +428,3 @@ print(pd.DataFrame(confusion_matrix(y_test,y_predict)))
 plot_confusion_matrix(confusion_matrix(y_test,y_predict),
                       classes=class_names, normalize = True, 
                       title='Normalized Confusion Matrix: SVM')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
